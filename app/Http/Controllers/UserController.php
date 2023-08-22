@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function users(){
+    public function users() {
         $users = User::all();
         return view('admin.user.index', compact('users'));
     }
@@ -84,6 +84,36 @@ class UserController extends Controller
         $user->save();
 
         return redirect('/settings')->with('success', 'تم حفظ الإعددات بنجاح');
+    }
+
+    public function disable($id) {
+        $user = User::find($id);
+        if($user->is_active) $user->is_active = 0;
+        $user->save();
+        return redirect('/users')->with('success', 'تم تعطيل الحساب');
+    }
+
+    public function activate($id) {
+        $user = User::find($id);
+        if(!$user->is_active) $user->is_active = 1;
+        $user->save();
+        return redirect('/users')->with('success', 'تم تفعيل الحساب');
+    }
+
+    public function eventState($id) {
+        $user = User::find(Auth::user()->id);
+        if($user->event_persmission) $user->event_persmission = 0;
+        elseif(!$user->event_persmission) $user->event_persmission = 1;
+        $user->save();
+        return redirect('users')->with('success', 'تم تفعيل صلاحية الأحداث');
+    }
+
+    public function usersState($id) {
+        $user = User::find(Auth::user()->id);
+        if($user->users_permission) $user->users_permission = 0;
+        elseif(!$user->users_permission) $user->users_permission = 1;
+        $user->save();
+        return redirect('users')->with('success', 'تم تفعيل صلاحية المستخدمين');
     }
 
     public function logout() {

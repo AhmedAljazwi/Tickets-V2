@@ -22,6 +22,8 @@ return new class extends Migration
             $table->bigInteger('city_id');
             $table->bigInteger('gender_id');
             $table->integer('user_type');
+            $table->boolean('event_persmission')->default('0');
+            $table->boolean('users_permission')->default('0');
             $table->boolean('is_active');
             $table->rememberToken();
             $table->timestamps();

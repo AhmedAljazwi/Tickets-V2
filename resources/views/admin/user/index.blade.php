@@ -20,6 +20,8 @@
                 <th scope="col">إسم المستخدم</th>
                 <th scope="col">البريد الإلكتروني</th>
                 <th scope="col">رقم الهاتف</th>
+                <th scope="col">صلاحية الأحداث</th>
+                <th scope="col">صلاحية المستخدمين</th>
                 <th scope="col">عمليات</th>
               </tr>
             </thead>
@@ -31,8 +33,25 @@
                     <td>{{$user->email}}</td>
                     <td>{{$user->phone}}</td>
                     <td>
-                      <a class="btn btn-success my-1" href="{{url('/edit-event/'.$user->id)}}">تعديل</a>
-                      <a class="btn btn-danger" href="{{url('/delete-event/'.$user->id)}}">حذف</a>
+                      @if($user->event_persmission == 0)
+                        <a href="{{url('/event-state/'.$user->id)}}" class="btn btn-success my-1">تفعيل</a>
+                      @else
+                        <a href="{{url('/event-state/'.$user->id)}}" class="btn btn-danger my-1">تعطيل</a>
+                      @endif
+                    </td>
+                    <td>
+                      @if($user->users_permission == 0)
+                        <a href="{{url('/users-state/'.$user->id)}}" class="btn btn-success my-1">تفعيل</a>
+                      @else
+                        <a href="{{url('/users-state/'.$user->id)}}" class="btn btn-danger my-1">تعطيل</a>
+                      @endif
+                    </td>
+                    <td>
+                      @if($user->is_active)
+                        <a class="btn btn-danger my-1" href="{{url('/disable-account/'.$user->id)}}">تعطيل</a>
+                      @elseif(!$user->is_active)
+                        <a class="btn btn-success my-1" href="{{url('/activate-account/'.$user->id)}}">تفعيل</a>
+                      @endif
                     </td>
                 </tr>
               @endforeach

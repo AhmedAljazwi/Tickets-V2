@@ -9,7 +9,11 @@
 </head>
 <body>
     @if(Auth::user())
-    @include('components.user-navbar')
+        @if(Auth::user()->user_type == 1)
+        @include('components.user-navbar')
+        @elseif(Auth::user()->user_type == 2)
+        @include('components.admin-navbar')
+        @endif
     @else
     @include('components.navbar')
     @endif
