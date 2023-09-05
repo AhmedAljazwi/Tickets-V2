@@ -32,11 +32,11 @@
                         @endforeach
                     </select>
 
-                    <select class="form-control mb-2" name="gender_id">
-                        @foreach($genders as $gender)
-                            <option value="{{$gender->id}}">{{$gender->name}}</option>
-                        @endforeach
-                    </select>
+                    <div class="mb-2">
+                        <input type="radio" name="gender_id" value="1" checked> ذكر
+                        <input type="radio" name="gender_id" value="2"> أنثى
+                    </div>
+
                     <button type="submit" class="btn btn-primary">تسجيل</button>
                 </form>
             </div>
