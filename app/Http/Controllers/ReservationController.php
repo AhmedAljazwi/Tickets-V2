@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Ticket;
+use App\Models\Wallet;
 use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
@@ -21,10 +22,16 @@ class ReservationController extends Controller
 
         $eventQuantity = Event::find($id);
         $quantity = $eventQuantity->quantity; //number of tickets of event
+        $price = $eventQuantity->price;
         $reservationTickets = Ticket::where('event_id', $id)->get()->sum('quantity');
 
-        if($quantity - $reservationTickets <= $request['quantity']) {
+        if($quantity - $reservationTickets < $request['quantity']) {
             return redirect('/show-event/'.$id)->with('failed', 'عدد التذاكر الذي طلبته غير متوفر، و عدد التذاكر المتوفر هو'.$quantity-$reservationTickets);
+        }
+
+        $balance = Wallet::where('user_id', Auth::user()->id)->first()->balance;
+        if($request['quantity'] * $price > $balance) {
+            return redirect('/show-event/'.$id)->with('failed', 'رصيدك لا يغطي قيمة التذاكر، و رصيدك هو '.$balance);
         }
 
         $ticket = new Ticket;
@@ -34,6 +41,10 @@ class ReservationController extends Controller
         $ticket->date = Today();
         $ticket->time = Now();
         $ticket->save();
+
+        $wallet = Wallet::where('user_id', Auth::user()->id)->first();
+        $wallet->balance -= $request['quantity'] * $price;
+        $wallet->save();
 
         return redirect('/');
     }

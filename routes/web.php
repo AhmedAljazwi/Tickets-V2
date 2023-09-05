@@ -5,6 +5,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WalletController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,3 +49,8 @@ Route::get('/activate-account/{id}', [UserController::class, 'activate'])->middl
 
 Route::get('/event-state/{id}', [UserController::class, 'eventState'])->middleware(['isUser', 'isAdmin', 'hasUsers']);
 Route::get('/users-state/{id}', [UserController::class, 'usersState'])->middleware(['isUser', 'isAdmin', 'hasUsers']);
+
+Route::get('/admin-wallet', [WalletController::class, 'index']);
+Route::get('/recharge-wallet/{id}', [WalletController::class, 'recharge']);
+Route::post('/recharge-wallet/{id}', [WalletController::class, 'rechargeUser']);
+Route::get('user-wallet', [WalletController::class, 'userWallet']);

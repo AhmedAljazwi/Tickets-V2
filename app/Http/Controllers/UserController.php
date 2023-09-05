@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\City;
 use App\Models\Gender;
 use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -43,6 +44,12 @@ class UserController extends Controller
         $user->user_type = 1;
         $user->is_active = 1;
         $user->save();
+
+        $userInfo = User::where('email', $request['email'])->first()->id;
+        $wallet = new Wallet;
+        $wallet->user_id = $userInfo;
+        $wallet->balance = 0;
+        $wallet->save();
 
         return redirect('/');
     }
@@ -101,7 +108,7 @@ class UserController extends Controller
     }
 
     public function eventState($id) {
-        $user = User::find(Auth::user()->id);
+        $user = User::find($id);
         if($user->event_persmission) $user->event_persmission = 0;
         elseif(!$user->event_persmission) $user->event_persmission = 1;
         $user->save();
@@ -109,7 +116,7 @@ class UserController extends Controller
     }
 
     public function usersState($id) {
-        $user = User::find(Auth::user()->id);
+        $user = User::find($id);
         if($user->users_permission) $user->users_permission = 0;
         elseif(!$user->users_permission) $user->users_permission = 1;
         $user->save();
